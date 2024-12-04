@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Liste des personnes</h2>
+<a href="{{ url_for('add_person') }}">Ajouter une nouvelle personne</a>
+<ul>
+    {% for person in people %}
+    <li>
+        {{ person.name }} ({{ person.age }}) 
+        <a href="{{ url_for('edit_person', id=person.id) }}">Éditer</a>
+        <a href="{{ url_for('delete_person', id=person.id) }}">Supprimer</a>
+    </li>
+    {% endfor %}
+</ul>
+<a href="{{ url_for('list_scores') }}">Voir les scores</a>
+{% endblock %}

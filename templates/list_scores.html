@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Liste des scores</h2>
+<a href="{{ url_for('add_score') }}">Ajouter un nouveau score</a>
+<ul>
+    {% for score in scores %}
+    <li>
+        Personne: {{ score.person_id }} - Score: {{ score.score }}
+        <a href="{{ url_for('edit_score', id=score.id) }}">Éditer</a>
+        <a href="{{ url_for('delete_score', id=score.id) }}">Supprimer</a>
+    </li>
+    {% endfor %}
+</ul>
+<a href="{{ url_for('list_people') }}">Voir les personnes</a>
+{% endblock %}
