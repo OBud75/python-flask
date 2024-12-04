@@ -1,0 +1,17 @@
+msgid "Person added successfully"
+msgstr "Personne ajoutée avec succès"
+
+msgid "Person updated successfully"
+msgstr "Personne mise à jour avec succès"
+
+msgid "Person deleted successfully"
+msgstr "Personne supprimée avec succès"
+
+msgid "Score added successfully"
+msgstr "Score ajouté avec succès"
+
+msgid "Score updated successfully"
+msgstr "Score mis à jour avec succès"
+
+msgid "Score deleted successfully"
+msgstr "Score supprimé avec succès"

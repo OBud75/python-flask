@@ -4,7 +4,7 @@ from models.score import Score
 from db.db import get_db, init_db
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key"
+app.secret_key = "secret_key"
 
 init_db()
 
@@ -14,9 +14,13 @@ def index():
 
 @app.route('/people')
 def list_people():
+    search = request.args.get('search')
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM people")
+    if search:
+        cursor.execute("SELECT * FROM people WHERE name LIKE ?", ('%' + search + '%',))
+    else:
+        cursor.execute("SELECT * FROM people")
     people = cursor.fetchall()
     people_list = [Person(id=row['id'], name=row['name'], age=row['age']) for row in people]
     return render_template('list_people.html', people=people_list)
@@ -63,9 +67,13 @@ def delete_person(id):
 
 @app.route('/scores')
 def list_scores():
+    search = request.args.get('search')
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM scores")
+    if search:
+        cursor.execute("SELECT scores.*, people.name as person_name FROM scores LEFT JOIN people ON scores.person_id = people.id WHERE people.name LIKE ?", ('%' + search + '%',))
+    else:
+        cursor.execute("SELECT scores.*, people.name as person_name FROM scores LEFT JOIN people ON scores.person_id = people.id")
     scores = cursor.fetchall()
     score_list = [Score(id=row['id'], person_id=row['person_id'], score=row['score']) for row in scores]
     return render_template('list_scores.html', scores=score_list)

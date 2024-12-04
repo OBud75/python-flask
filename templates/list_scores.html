@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Liste des scores</h2>
+<form method="GET" action="{{ url_for('list_scores') }}">
+    <input type="text" name="search" placeholder="Rechercher des scores">
+    <input type="submit" value="Rechercher">
+</form>
 <a href="{{ url_for('add_score') }}">Ajouter un nouveau score</a>
 <ul>
     {% for score in scores %}

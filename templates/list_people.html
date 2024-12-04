@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Liste des personnes</h2>
+<form method="GET" action="{{ url_for('list_people') }}">
+    <input type="text" name="search" placeholder="Rechercher des personnes">
+    <input type="submit" value="Rechercher">
+</form>
 <a href="{{ url_for('add_person') }}">Ajouter une nouvelle personne</a>
 <ul>
     {% for person in people %}
