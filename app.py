@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import sqlite3
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key"
+app.secret_key = "secret_key"
 
 DATABASE = 'database.db'
 
@@ -63,7 +63,6 @@ def delete_person(id):
     flash('Person deleted successfully')
     return redirect(url_for('list_people'))
 
-# CRUD pour les scores
 @app.route('/scores')
 def list_scores():
     conn = get_db()

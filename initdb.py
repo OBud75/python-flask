@@ -6,7 +6,6 @@ def init_db():
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     
-    # Créer la table people
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS people (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -15,7 +14,6 @@ def init_db():
         )
     ''')
     
-    # Créer la table scores
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS scores (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
