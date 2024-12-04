@@ -1,28 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-import sqlite3
+from models.person import Person
+from models.score import Score
+from db.db import get_db, init_db
 
 app = Flask(__name__)
-app.secret_key = "secret_key"
+app.secret_key = "your_secret_key"
 
-DATABASE = 'database.db'
-
-def get_db():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
+init_db()
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# CRUD pour les personnes
 @app.route('/people')
 def list_people():
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM people")
     people = cursor.fetchall()
-    return render_template('list_people.html', people=people)
+    people_list = [Person(id=row['id'], name=row['name'], age=row['age']) for row in people]
+    return render_template('list_people.html', people=people_list)
 
 @app.route('/add_person', methods=['GET', 'POST'])
 def add_person():
@@ -42,7 +39,8 @@ def edit_person(id):
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM people WHERE id = ?", (id,))
-    person = cursor.fetchone()
+    row = cursor.fetchone()
+    person = Person(id=row['id'], name=row['name'], age=row['age'])
 
     if request.method == 'POST':
         name = request.form['name']
@@ -69,7 +67,8 @@ def list_scores():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM scores")
     scores = cursor.fetchall()
-    return render_template('list_scores.html', scores=scores)
+    score_list = [Score(id=row['id'], person_id=row['person_id'], score=row['score']) for row in scores]
+    return render_template('list_scores.html', scores=score_list)
 
 @app.route('/add_score', methods=['GET', 'POST'])
 def add_score():
@@ -86,14 +85,16 @@ def add_score():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM people")
     people = cursor.fetchall()
-    return render_template('add_score.html', people=people)
+    people_list = [Person(id=row['id'], name=row['name'], age=row['age']) for row in people]
+    return render_template('add_score.html', people=people_list)
 
 @app.route('/edit_score/<int:id>', methods=['GET', 'POST'])
 def edit_score(id):
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM scores WHERE id = ?", (id,))
-    score = cursor.fetchone()
+    row = cursor.fetchone()
+    score = Score(id=row['id'], person_id=row['person_id'], score=row['score'])
 
     if request.method == 'POST':
         person_id = request.form['person_id']
@@ -105,7 +106,8 @@ def edit_score(id):
 
     cursor.execute("SELECT * FROM people")
     people = cursor.fetchall()
-    return render_template('edit_score.html', score=score, people=people)
+    people_list = [Person(id=row['id'], name=row['name'], age=row['age']) for row in people]
+    return render_template('edit_score.html', score=score, people=people_list)
 
 @app.route('/delete_score/<int:id>')
 def delete_score(id):
