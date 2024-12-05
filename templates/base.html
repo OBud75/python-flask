@@ -12,6 +12,7 @@
             <a href="{{ url_for('index') }}">Accueil</a>
             <a href="{{ url_for('list_people') }}">Gérer les Personnes</a>
             <a href="{{ url_for('list_scores') }}">Gérer les Scores</a>
+            <a href="{{ url_for('morpion') }}">Jeu de Morpion</a>
         </nav>
         {% with messages = get_flashed_messages() %}
         {% if messages %}

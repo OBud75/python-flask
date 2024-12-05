@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from models.person import Person
 from models.score import Score
 from db.db import get_db, init_db
+from tic_tac_toe import Game, Board
 
 app = Flask(__name__)
 app.secret_key = "secret_key"
@@ -125,6 +126,71 @@ def delete_score(id):
     conn.commit()
     flash('Score deleted successfully')
     return redirect(url_for('list_scores'))
+
+@app.route('/morpion', methods=['GET', 'POST'])
+def morpion():
+    if 'board' not in session:
+        session['board'] = [[" " for _ in range(3)] for _ in range(3)]
+    if 'player' not in session:
+        session['player'] = "X"
+    if 'completed_games' not in session:
+        session['completed_games'] = []
+
+    board = Board(position=session['board'])
+    game = Game()
+    game.board = board
+    game.current_player = session['player']
+
+    result = None
+
+    if request.method == 'POST':
+        try:
+            row_col = request.form['row']
+            row, col = map(int, row_col.split('-'))
+        except KeyError:
+            flash('Invalid move. Please try again.')
+            return redirect(url_for('morpion'))
+
+        if game.board.position[row][col] == " ":
+            game.board = game.board.make_move(row, col, "X") 
+            if game.board.is_won("X"):
+                result = 'X a gagné !'
+                session['completed_games'].append((game.board.position, result))
+                session.pop('board', None)
+                session.pop('player', None)
+            elif game.board.is_full():
+                result = "Match nul !"
+                session['completed_games'].append((game.board.position, result))
+                session.pop('board', None)
+                session.pop('player', None)
+            else:
+                game.play_computer_move() 
+                if game.board.is_won("O"):
+                    result = 'L\'ordinateur a gagné !'
+                    session['completed_games'].append((game.board.position, result))
+                    session.pop('board', None)
+                    session.pop('player', None)
+                elif game.board.is_full():
+                    result = "Match nul !"
+                    session['completed_games'].append((game.board.position, result))
+                    session.pop('board', None)
+                    session.pop('player', None)
+            session['board'] = game.board.position
+
+    return render_template('morpion.html', board=game.board.position, player="X", result=result, completed_games=session['completed_games'])
+
+
+@app.route('/reset_board')
+def reset_board():
+    session['board'] = [[" " for _ in range(3)] for _ in range(3)]
+    session['player'] = "X"
+    return redirect(url_for('morpion'))
+
+@app.route('/clear_history')
+def clear_history():
+    session.pop('completed_games', None)
+    return redirect(url_for('morpion'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
