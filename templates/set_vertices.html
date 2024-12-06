@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Nombre de Sommets</h2>
+<form method="POST">
+    <label for="num_vertices">Nombre de sommets :</label>
+    <input type="number" id="num_vertices" name="num_vertices" required>
+    <button type="submit">Continuer</button>
+</form>
+{% endblock %}

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
+from dijkstra import Graph
 from tesla_action import StockData, StockGraph
 from models.person import Person
 from models.score import Score
@@ -232,6 +233,71 @@ def date_calculator():
         except ValueError:
             flash('Veuillez entrer un nombre valide.')
     return render_template('date_calculator.html', date_result=date_result)
+
+
+
+
+@app.route('/set_vertices', methods=['GET', 'POST'])
+def set_vertices():
+    if request.method == 'POST':
+        num_vertices = int(request.form['num_vertices'])
+        session['num_vertices'] = num_vertices
+        session['vertices'] = [chr(65+i) for i in range(num_vertices)]
+        session['edges'] = []  
+        global graph
+        graph = Graph()  
+        return redirect(url_for('set_edges'))
+    return render_template('set_vertices.html')
+
+
+@app.route('/set_edges', methods=['GET', 'POST'])
+def set_edges():
+    vertices = session.get('vertices', [])
+    edges = session.get('edges', [])
+    if request.method == 'POST':
+        from_vertex = request.form.get('from_vertex')
+        to_vertex = request.form.get('to_vertex')
+        weight = int(request.form.get('weight'))
+        if any(edge[0] == from_vertex and edge[1] == to_vertex for edge in edges):
+            flash("L'arête existe déjà avec un poids.")
+        else:
+            graph.add_edge(from_vertex, to_vertex, weight)
+            edges.append((from_vertex, to_vertex, weight))
+            session['edges'] = edges
+    return render_template('set_edges.html', vertices=vertices, edges=edges)
+
+@app.route('/generate_graph', methods=['GET'])
+def generate_graph():
+    start_vertex = session['vertices'][0] if session.get('vertices') else 'A'
+    distances, shortest_path = graph.dijkstra(start_vertex)
+    graph.draw_graph("graph.png")
+    return render_template('dijkstra.html', distances=distances, shortest_path=shortest_path, start_vertex=start_vertex, edges=graph.edges, vertices=session['vertices'])
+
+
+@app.route('/graph_image')
+def graph_image():
+    return send_from_directory('models', 'graph.png')
+
+
+@app.route('/shortest_path', methods=['POST'])
+def shortest_path():
+    start_vertex = request.form.get('start_vertex')
+    end_vertex = request.form.get('end_vertex')
+    distances, shortest_path = graph.dijkstra(start_vertex)
+
+    path = []
+    current_vertex = end_vertex
+    while current_vertex != start_vertex:
+        path.append(current_vertex)
+        current_vertex = shortest_path.get(current_vertex)
+        if current_vertex is None:  
+            flash("Aucun chemin trouvé entre {} et {}".format(start_vertex, end_vertex))
+            return redirect(url_for('generate_graph'))
+    path.append(start_vertex)
+    path.reverse()
+
+    return render_template('shortest_path.html', start_vertex=start_vertex, end_vertex=end_vertex, path=path, distance=distances[end_vertex])
+
 
 
 if __name__ == '__main__':

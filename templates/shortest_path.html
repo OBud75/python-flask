@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Chemin le plus court entre {{ vertex }} et {{ vertex }}</h2>
+{% if path %}
+<p>Le chemin est : {{ path | join(" -> ") }}</p>
+<p>La distance totale est : {{ distance }}</p>
+{% else %}
+<p>Aucun chemin trouvé.</p>
+{% endif %}
+<a href="{{ url_for('generate_graph') }}">Retour</a>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Algorithme de Dijkstra</h2>
+<h3>Distances depuis le sommet {{ start_vertex }}</h3>
+<ul>
+    {% for vertex, distance in distances.items() %}
+    <li>Distance vers {{ vertex }}: {{ distance }}</li>
+    {% endfor %}
+</ul>
+<h3>Calculer le chemin le plus court entre deux sommets</h3>
+<form method="POST" action="{{ url_for('shortest_path') }}">
+    <label for="start_vertex">Sommet de départ :</label>
+    <select id="start_vertex" name="start_vertex" required>
+        {% for vertex in vertices %}
+        <option value="{{ vertex }}">{{ vertex }}</option>
+        {% endfor %}
+    </select>
+    <label for="end_vertex">Sommet d'arrivée :</label>
+    <select id="end_vertex" name="end_vertex" required>
+        {% for vertex in vertices %}
+        <option value="{{ vertex }}">{{ vertex }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Calculer</button>
+</form>
+<img src="{{ url_for('graph_image') }}" alt="Graph">
+{% endblock %}

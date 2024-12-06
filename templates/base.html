@@ -15,6 +15,7 @@
             <a href="{{ url_for('morpion') }}">Jeu de Morpion</a>
             <a href="{{ url_for('show_stock_graph') }}">Afficher le graphique de l'action Tesla</a>
             <a href="{{ url_for('date_calculator') }}">Calculateur de date</a>
+            <a href="{{ url_for('set_vertices') }}">Algorithme de Dijkstra</a>
         </nav>
         {% with messages = get_flashed_messages() %}
         {% if messages %}

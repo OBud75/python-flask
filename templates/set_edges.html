@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Définir les Arêtes</h2>
+<form method="POST">
+    <label for="from_vertex">De :</label>
+    <select id="from_vertex" name="from_vertex" required>
+        {% for vertex in vertices %}
+        <option value="{{ vertex }}">{{ vertex }}</option>
+        {% endfor %}
+    </select>
+    <label for="to_vertex">À :</label>
+    <select id="to_vertex" name="to_vertex" required>
+        {% for vertex in vertices %}
+        <option value="{{ vertex }}">{{ vertex }}</option>
+        {% endfor %}
+    </select>
+    <label for="weight">Poids :</label>
+    <input type="number" id="weight" name="weight" required>
+    <button type="submit">Ajouter Arête</button>
+</form>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="alert alert-danger">
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endwith %}
+<a href="{{ url_for('generate_graph') }}">Générer le Graphe et Calculer les Chemins</a>
+{% endblock %}
