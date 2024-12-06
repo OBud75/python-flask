@@ -13,6 +13,8 @@
             <a href="{{ url_for('list_people') }}">Gérer les Personnes</a>
             <a href="{{ url_for('list_scores') }}">Gérer les Scores</a>
             <a href="{{ url_for('morpion') }}">Jeu de Morpion</a>
+            <a href="{{ url_for('show_stock_graph') }}">Afficher le graphique de l'action Tesla</a>
+            <a href="{{ url_for('date_calculator') }}">Calculateur de date</a>
         </nav>
         {% with messages = get_flashed_messages() %}
         {% if messages %}

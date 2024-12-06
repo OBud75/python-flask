@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Calculateur de date</h2>
+<form method="POST">
+    <label for="days">Nombre de jours :</label>
+    <input type="number" id="days" name="days" required>
+    <button type="submit">Calculer la date</button>
+</form>
+{% if date_result %}
+<p>La date d'il y a {{ request.form['days'] }} jours est : {{ date_result }}</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Graphique de l'action Tesla</h2>
+<img src="{{ url_for('get_stock_image') }}" alt="Graphique de l'action Tesla">
+<a href="{{ url_for('generate_stock_graph') }}">Rafraîchir le graphique</a>
+{% endblock %}

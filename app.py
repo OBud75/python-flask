@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
+from tesla_action import StockData, StockGraph
 from models.person import Person
 from models.score import Score
 from db.db import get_db, init_db
 from tic_tac_toe import Game, Board
+from date_calculator import GestionDate
+
 
 app = Flask(__name__)
 app.secret_key = "secret_key"
@@ -190,6 +193,45 @@ def reset_board():
 def clear_history():
     session.pop('completed_games', None)
     return redirect(url_for('morpion'))
+
+
+
+
+@app.route('/show_date_page')
+def show_date_page():
+    return render_template('show_date_page.html')
+
+
+@app.route('/generate_stock_graph')
+def generate_stock_graph():
+    tesla_stock = StockData("TSLA")
+    tesla_stock.fetch_data(start_date="2023-01-01", end_date="2023-12-01")
+    StockGraph.plot_stock(tesla_stock.data, title="Évolution de l'action Tesla (TSLA)", output_file="models/tesla_stock_2023.png")
+    return redirect(url_for('show_stock_graph'))
+
+@app.route('/show_stock_graph')
+def show_stock_graph():
+    return render_template('show_stock_graph.html')
+
+@app.route('/get_stock_image')
+def get_stock_image():
+    return send_from_directory('models', 'tesla_stock_2023.png')
+
+
+
+
+
+@app.route('/date_calculator', methods=['GET', 'POST'])
+def date_calculator():
+    date_result = None
+    if request.method == 'POST':
+        try:
+            days = int(request.form['days'])
+            gestion_date = GestionDate()
+            date_result = gestion_date.date_il_y_a_x_jours(days)
+        except ValueError:
+            flash('Veuillez entrer un nombre valide.')
+    return render_template('date_calculator.html', date_result=date_result)
 
 
 if __name__ == '__main__':
