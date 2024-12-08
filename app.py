@@ -268,11 +268,15 @@ def set_edges():
 
 @app.route('/generate_graph', methods=['GET'])
 def generate_graph():
+    missing_vertices = [vertex for vertex in session['vertices'] if vertex not in graph.edges and all(vertex not in edge for edge in session['edges'])]
+    if missing_vertices:
+        flash("Le graphe ne peut pas être généré. Des sommets n'ont pas d'arêtes : " + ", ".join(missing_vertices))
+        return redirect(url_for('set_edges'))
+
     start_vertex = session['vertices'][0] if session.get('vertices') else 'A'
     distances, shortest_path = graph.dijkstra(start_vertex)
     graph.draw_graph("graph.png")
     return render_template('dijkstra.html', distances=distances, shortest_path=shortest_path, start_vertex=start_vertex, edges=graph.edges, vertices=session['vertices'])
-
 
 @app.route('/graph_image')
 def graph_image():
