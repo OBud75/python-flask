@@ -16,18 +16,37 @@ class StockData:
 class StockGraph:
     @staticmethod
     def plot_stock(data, title="Graphique des actions", output_file="models/tesla_stock_2023.png"):
-        if data is not None and not data.empty:
-            plt.figure(figsize=(10, 5))
-            plt.plot(data['Close'], label='Prix de clôture')
-            plt.title(title)
-            plt.xlabel("Date")
-            plt.ylabel("Prix ($)")
-            plt.legend()
-            plt.grid()
-            plt.savefig(output_file) 
-            print(f"Graphique enregistré sous le nom : {output_file}")
-        else:
+        # if data is not None and not data.empty:
+        #     plt.figure(figsize=(10, 5))
+        #     plt.plot(data['Close'], label='Prix de clôture')
+        #     plt.title(title)
+        #     plt.xlabel("Date")
+        #     plt.ylabel("Prix ($)")
+        #     plt.legend()
+        #     plt.grid()
+        #     plt.savefig(output_file) 
+        #     print(f"Graphique enregistré sous le nom : {output_file}")
+        # else:
+        #     print("Aucune donnée disponible pour tracer le graphique.")
+
+        # Ajouter un "early return" permet d'éviter le "else" et donc réduire le niveau d'indentation
+        # En inversant la condition on peut d'abord gérer le cas particulier et ensuite faire la
+        # logique principale sans avoir à l'indenter.
+        # C'est souvent apprécié pour améliorer la lisibilité du code, encore une fois il n'y
+        # a pas de règle absolue, à vous de juger si le "else" apporte en clareté.
+        if data is None or data.empty:
             print("Aucune donnée disponible pour tracer le graphique.")
+            return
+
+        plt.figure(figsize=(10, 5))
+        plt.plot(data['Close'], label='Prix de clôture')
+        plt.title(title)
+        plt.xlabel("Date")
+        plt.ylabel("Prix ($)")
+        plt.legend()
+        plt.grid()
+        plt.savefig(output_file) 
+        print(f"Graphique enregistré sous le nom : {output_file}")
 
 if __name__ == "__main__":
     tesla_stock = StockData("TSLA")
