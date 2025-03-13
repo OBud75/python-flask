@@ -40,6 +40,7 @@ class Person:
 if __name__ == "__main__":
     p: Person = Person.create(name="Thomas", age=10)
     thomas: Any = Person.get_by_name("Thomas")
+    # Le type est Person | None. Tant qu'a rajouter des types autant éviter Any
     if thomas:
         print(thomas.name)
     else:

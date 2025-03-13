@@ -21,6 +21,7 @@ def problem1():
                 break
 
         if is_valid:
+            # Ici vous utilisez bien la compréhension de liste : all(generator_expression)
             is_increasing = all(sublist[k] <= sublist[k + 1] for k in range(len(sublist) - 1))
             is_decreasing = all(sublist[k] >= sublist[k + 1] for k in range(len(sublist) - 1))
             if not (is_increasing or is_decreasing):
@@ -51,6 +52,7 @@ def problem2():
     print(ans)
     
 def is_safe(sublist):
+    # Bon réflèxe d'en faire une fonction, on pourrait faire de même avec is_increasing et is_decreasing
     if not sublist:
         return False 
 

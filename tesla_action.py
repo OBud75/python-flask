@@ -53,3 +53,7 @@ if __name__ == "__main__":
     tesla_stock.fetch_data(start_date="2023-01-01", end_date="2023-12-01")
 
     StockGraph.plot_stock(tesla_stock.data, title="Évolution de l'action Tesla (TSLA)", output_file="models/tesla_stock_2023.png")
+    # On peut immaginer une fonction plot_stock qui prendrait en argument uniquement l'instance de StockData
+    # def plot(stock: StockData):
+        # title = f"Évolution de l'action {stock.ticker} ({stock.ticker})"
+        # output_file = f"models/{stock.ticker}_stock.png"
