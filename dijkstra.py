@@ -52,4 +52,5 @@ class Graph:
 
 
 # Si ce genre d'algo vous interesse, je vous conseille vivement le cours cs50 AI https://cs50.harvard.edu/ai/2024/weeks/0/
-# Regardez aussi du côté du module python https://docs.python.org/3/library/queue.html
+# Regardez du côté du module python https://docs.python.org/3/library/queue.html
+# Ansi que de la librairie https://docs.scipy.org/doc/scipy/
